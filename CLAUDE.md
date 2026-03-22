@@ -1,23 +1,15 @@
-# CLAUDE.md — Claude-specific universal instructions
+# CLAUDE.md
 
-This file supplements AGENTS.md with Claude Code-specific conventions.
+Claude Code compatibility shim for this registry.
 
-## Memory
+Read `AGENTS.md` first. It is the primary source of reusable workflow guidance.
 
-- Read AGENTS.md for cross-tool standards (working style, testing policy, git workflow).
-- Project-specific context (build commands, architecture) lives in each repo's own docs.
+For Claude Code usage:
 
-## Claude-specific behavior
+- Treat `agents/` as candidate subagent definitions or role briefs.
+- Treat `commands/` as workflow entrypoints that can become slash commands if needed.
+- Treat `skills/` as the main reusable library.
+- Keep repo-specific conventions in the target repository, not in this registry.
 
-- Use `gh` CLI for GitHub operations (issues, PRs, labels).
-- Use `git diff --cached` before every commit to review changes.
-- When creating files, prefer the project's established directory structure.
-- When uncertain about a library API, use `/docs` or web search before guessing.
-
-## Commit messages
-
-Format: `<type>: <description>`
-
-Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `style`
-
-Include test counts when tests are added: `feat: add user validation (12 tests)`
+If a Claude-specific feature conflicts with the reusable registry shape, prefer the reusable shape
+unless the compatibility win is strong and recurring.

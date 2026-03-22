@@ -1,246 +1,119 @@
-# AGENTS.md — Universal Agent Instructions
+# AGENTS.md
 
-Guidance for AI coding agents (Claude Code, GitHub Copilot, Codex, OpenCode, Cursor, etc.).
+Reusable workflow registry for coding agents mounted into many repositories by dotghost.
 
-This file contains cross-project standards. Project-specific context (build commands,
-architecture, conventions) belongs in a separate file committed to each repository
-(e.g., `CLAUDE.md`, `PROJECT.md`, or the project-specific section of a local `AGENTS.md`).
+This file is the root entrypoint. It explains how to use the registry without mixing in
+project-specific build commands, architecture notes, or stack details. Those belong in the
+target repository.
 
----
+## Registry model
 
-## Working Style
+- `AGENTS.md`: the top-level operating brief and decision boundary.
+- `agents/`: focused agent roles for isolated execution modes or subagent definitions.
+- `commands/`: repeatable workflow entrypoints for common tasks.
+- `workflows/`: outcome-level paths that compose commands and skills.
+- `skills/`: reusable task playbooks and domain guidance. This is the main library.
 
-- **Discuss before implementing** non-trivial features. Present decision points and options.
-- **No commits without explicit user approval.**
-- **Flag uncertainty** — stop and ask rather than guessing.
-- **Fetch external library docs** before implementing. Don't rely on training data for APIs.
-- After completing tasks, follow the "After Completing Tasks" checklist below.
+Use the smallest unit that fits the task:
 
-### Before Writing Code
+- Use `AGENTS.md` for broad working rules.
+- Use an agent when the work benefits from a distinct role or tighter boundaries.
+- Use a command when the task is a repeatable workflow entrypoint.
+- Use a workflow when the outcome reliably spans several commands or skills.
+- Use a skill when the task needs a reusable playbook, decision rules, and tradeoffs.
 
-1. **List decision points** — Before implementing non-trivial features, identify choices and
-   present them: "Here are the decisions I'd make. Want to discuss any of these?"
-   Include: data structures, naming, patterns, dependencies, tradeoffs.
+## Operating principles
 
-2. **Present options, don't just pick** — When multiple valid approaches exist, explain each
-   with pros/cons rather than choosing one silently.
+- Prefer concrete action over vague planning.
+- Preserve repository conventions before introducing your own.
+- Fix root causes, not symptoms.
+- Keep changes minimal, local, and reversible.
+- Validate changes when possible with tests, linters, builds, or targeted checks.
+- Separate reusable workflow guidance from repo-specific guidance.
+- Ask when a decision is materially ambiguous, irreversible, or expensive to unwind.
+- Do not create broad scaffolding without evidence that the repo needs it.
 
-3. **Ask clarifying questions** — If requirements are ambiguous, ask rather than assume.
-   Better to pause than to build the wrong thing.
+## Working boundary
 
-4. **Work in small chunks** — For larger features, break into phases:
-   - Phase 1: Discuss approach → get approval
-   - Phase 2: Implement core → review
-   - Phase 3: Iterate
+This registry is reusable on purpose. It should contain:
 
-### During Implementation
+- workflows that apply across many repos
+- review and debugging methods
+- implementation and release habits
+- onboarding patterns for unfamiliar codebases
 
-5. **No commits without explicit approval** — Wait for "go ahead", "commit this", or similar
-   before running `git commit`.
+It should not contain:
 
-6. **Flag uncertainty** — If unsure about something mid-implementation, stop and ask rather
-   than guessing.
+- a specific repo's build commands
+- local architecture facts
+- product rules
+- stack-specific mandates unless they are clearly scoped inside a skill
 
-7. **Explain non-obvious choices** — When you make a decision, briefly note why.
+Put repo-specific guidance in the mounted repository, usually as a local `AGENTS.md`, nested
+`AGENTS.md` files, or project docs committed with the code.
 
-### After Completing Tasks
+## Directory map
 
-8. **Update task tracking** — Mark completed tasks, add any new follow-up tasks discovered.
-
-9. **Close issues** — If the completed task has a corresponding issue, close it:
-
-   ```bash
-   gh issue close <number>
-   ```
-
-10. **Update feature tracking docs** — Follow the project's "After Completing Tasks" checklist.
-
-11. **Update ADRs when behavior changes** — If implementation changes documented behavior,
-    update the relevant ADR.
-
-12. **Keep docs in sync** — Before finishing any task that touched documentation, verify
-    related docs are updated.
-
----
-
-## When to Write Tests
-
-New code needs tests. Passing existing tests only proves nothing regressed — it says nothing
-about whether the new code works.
-
-**Always test:**
-
-- Pure functions and conversion layers (parsers, mappers, sorting, validation)
-- State stores (state transitions, action side effects)
-- DB query functions (CRUD, edge cases, constraints)
-- Algorithms with branching logic (dedup, scoring, inference, routing)
-- Bug fixes — write a failing test first, then fix
-
-**Test if non-trivial:**
-
-- Hooks with logic beyond simple state reads (debounce, subscriptions, derived state)
-- Integration points (IPC contracts, adapter layers)
-- Complex UI components with conditional rendering or user interactions
-
-**Skip testing:**
-
-- Thin wrapper components that only compose other components with props
-- One-liner re-exports or type definitions
-- Purely declarative config (static arrays, route definitions)
-
-**Rule of thumb:** If a module has `if/else`, `switch`, `map/filter/reduce`, or async
-orchestration, it should have tests. If it's just plumbing, it doesn't need its own test file.
-
-**For AI agents:** When you create a new module that falls in the "always test" category, write
-tests in the same PR. Don't defer to a separate "add tests" step. When modifying an existing
-tested module, update or add tests to cover the new behavior. Include test counts in commit
-messages when tests are added or updated.
-
----
-
-## General Code Principles
-
-- Prefer editing existing files over creating new ones
-- No secrets, API keys, or credentials in committed files
-- Prefer the project's established patterns over importing new libraries
-- When in doubt about a convention, look at how existing code does it
-
----
-
-## Git Workflow
-
-### Branching
-
-All work happens on feature branches, never directly on `main`. Feature branches use
-the `feat/` prefix scoped to a version phase:
-
-```
-feat/v0.4a-fix-broken-features
-feat/v0.4b-quick-capture
-feat/v0.5a-activity-instrumentation
+```text
+agents/   focused execution roles
+commands/ repeatable workflow entrypoints
+workflows/ outcome-level paths through the registry
+skills/   reusable playbooks and decision frameworks
 ```
 
-### Merging to Main
+## Usage
 
-1. **Ensure checks pass** (lint, typecheck, tests)
-2. **Create a pull request**
-3. **Stop and tell the user** — give them the PR URL and wait for them to merge it
-4. When the user confirms the PR is merged:
-   - `git checkout main && git pull origin main`
-   - `git push origin --delete feat/branch-name`
-   - `git branch -d feat/branch-name`
+- Start here to understand the registry's intent and boundaries.
+- Reach for `skills/` first when a task needs a concrete method.
+- Use `commands/` to standardize recurring workflows like planning, review, or release.
+- Use `workflows/` for common end-to-end outcomes like landing a feature or shipping a bug fix.
+- Use `agents/` when a tool supports custom subagents or when a human wants a clear role split.
 
-Never merge locally — always through a PR so the merge is tracked. Never merge the PR yourself —
-the user reviews and merges.
+## Workflow layer
 
-### Starting a New Phase
+Workflows live in `workflows/` and sit one level above commands and skills.
 
-1. `git checkout main && git pull`
-2. `git checkout -b feat/v0.Xn-description`
-3. `git push -u origin feat/v0.Xn-description` (on first commit)
+- Keep workflows short and compositional.
+- Point to existing commands and skills instead of restating them.
+- Add a workflow only when the same multi-step path recurs across repositories.
 
----
+Good fits are outcomes such as first change in an unfamiliar repo, bug fix, or feature delivery.
 
-## Feature Tracking
+## Skill shape
 
-```
-docs/plan/roadmap.md     → all versions, high-level feature lists (source of truth)
-docs/plan/v0.X-*.md      → detailed planning per version
-TODO.md                  → current version execution (flat checkbox list)
-TODO.md ## Deferred      → parking lot for deferred items across all versions
-GitHub Issues            → agent backlog only (version-free, independent, grab-and-go)
-```
+Skills live in `skills/<name>/SKILL.md` on purpose.
 
-- **Checkboxes:** `[ ]` not started, `[x]` done, `[d]` deferred, `[b]` backlogged (linked Issue)
-- **`[b]` marker** — independent work an agent can tackle anytime. Always has a GitHub Issue.
-- **`[d]` marker** — deferred to a later version. No issue needed.
-- GitHub Issues are only for agent-safe backlog items, not a mirror of the roadmap.
+- Keep the main `SKILL.md` focused on the workflow itself.
+- Add supporting files only when a skill genuinely needs examples, scripts, templates, or reference
+	material.
+- Do not create support files as ceremony.
 
-### GitHub Labels
+This follows the direction of the wider Agent Skills ecosystem while keeping the starter registry
+lightweight.
 
-| Label           | Purpose                                     |
-| --------------- | ------------------------------------------- |
-| `agent-backlog` | In the agent queue, not yet picked up       |
-| `agent-safe`    | Can be implemented without design decisions |
-| `critical`      | Blocks other work                           |
-| `nice-to-have`  | Quality-of-life improvement                 |
+## Maturity model
 
-### Creating Backlog Issues
+Use a small maturity vocabulary to keep the registry sharp.
 
-```bash
-gh issue create --title "Short description" --label "agent-backlog,agent-safe" --body "..."
-```
+- `core`: stable, broadly useful, and appropriate for the default mounted surface.
+- `candidate`: promising, but needs more repeated usage before it earns a permanent standalone slot.
+- `experimental`: active idea or narrow pattern that should stay out of the main surface until it hardens.
 
-Mark as `[b]` in TODO.md with a link to the issue.
+Default to `core` only when the artifact has broad cross-repo value. Avoid turning maturity into extra
+directory sprawl until dotghost actually needs selective mounting for it.
 
-### Roadmap Section Structure
+## Packaging stance
 
-```markdown
-## v0.X — Title
+This repository is a mounted registry first, not a marketplace catalog.
 
-Overview paragraph.
+- Do not optimize the structure around one tool's plugin system.
+- Do not add generated catalogs, installers, or bundle metadata unless dotghost usage proves they
+	are needed.
+- Favor portable markdown assets over harness-specific glue.
 
-### Features (competitive reference)
+## Quality bar
 
-### Features (unique)
-
-### Exit Criteria
-
-### Notes
-```
-
-### Version Transitions
-
-When a version's exit criteria are all met:
-
-**1. Close the outgoing version**
-
-- **roadmap.md**: Add `✅` to the version heading, mark all feature rows 🟢, check all
-  exit criteria `[x]`, update version history table
-- **GitHub Issues**: Close any issues completed during the version
-- **TODO.md**: Add `(archived)` marker to the version heading, leave all checkboxes as-is
-
-**2. Update the Deferred section**
-
-- Move any `[d]` items from the closing version into `## Deferred` in TODO.md with
-  `(from v0.Y)` annotation
-- `[b]` items stay where they are — tracked via GitHub Issues
-
-**3. Open the incoming version**
-
-- **roadmap.md**: Add `Current:` prefix to the new version heading
-- **TODO.md**: Create new `## v0.X` section at the top
-- Review `## Deferred` — promote items that fit the new version
-
-**4. Commit and push**
-
-- Single commit: `docs: archive v0.X, open v0.Y — version transition`
-- Push directly to `main` (transition is docs-only, no PR needed)
-
----
-
-## Planning Lessons
-
-### Document Behaviors, Not Just Data Structures
-
-Plans should specify:
-
-1. **Data model** — What fields exist on types
-2. **UI elements** — What buttons/controls exist
-3. **Behaviors** — What happens when users interact
-
-When planning features with semantic relationships, explicitly document:
-
-- What happens on edge creation (side effects on source/target nodes)
-- What triggers AI assistance
-- How action buttons differ from manual interactions
-
----
-
-## What NOT to Do
-
-- Do not commit secrets, API keys, or .env files
-- Do not make large refactors while implementing a feature — separate concerns into separate PRs
-- Do not add new dependencies without justification
-- Do not silently make architectural decisions — surface them for discussion
-- Do not push to `main` directly
+- Be concise, but not shallow.
+- Prefer operational guidance over theory.
+- Avoid tool-specific ceremony unless it improves compatibility in practice.
+- Expand the registry only after repeated use proves the gap is real.
