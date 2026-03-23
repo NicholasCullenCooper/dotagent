@@ -48,6 +48,9 @@ skills/
 The registry can also carry dotghost control-plane files such as `dotghost.profiles.json`. Those are
 consumed by dotghost but are not mounted into target repositories.
 
+The shipped profile file now uses profile composition as well: a small shared base profile carries
+the root files, and the user-facing profiles build on top of it.
+
 The mounted repository can then add its own local guidance alongside this registry. In practice,
 that means:
 

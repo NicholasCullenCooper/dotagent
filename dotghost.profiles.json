@@ -1,9 +1,15 @@
 {
-    "core": {
-        "description": "Default shared workflow layer for most repositories",
+    "shared": {
+        "description": "Shared root files used by the composed registry profiles",
         "include": [
             "AGENTS.md",
-            "CLAUDE.md",
+            "CLAUDE.md"
+        ]
+    },
+    "core": {
+        "description": "Default shared workflow layer for most repositories",
+        "extends": "shared",
+        "include": [
             "agents/**",
             "commands/**",
             "workflows/**",
@@ -12,9 +18,8 @@
     },
     "onboarding": {
         "description": "Read-first profile for unfamiliar repositories and first safe changes",
+        "extends": "shared",
         "include": [
-            "AGENTS.md",
-            "CLAUDE.md",
             "agents/explore.md",
             "agents/researcher.md",
             "commands/plan.md",
@@ -27,9 +32,8 @@
     },
     "delivery": {
         "description": "Implementation, debugging, testing, and release-oriented workflows",
+        "extends": "shared",
         "include": [
-            "AGENTS.md",
-            "CLAUDE.md",
             "agents/debugger.md",
             "agents/implementer.md",
             "agents/reviewer.md",
