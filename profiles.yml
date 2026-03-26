@@ -1,0 +1,71 @@
+shared:
+  description: Shared root files used by all composed profiles
+  include:
+    - AGENTS.md
+    - CLAUDE.md
+
+core:
+  description: Default workflow layer for most repositories
+  extends: shared
+  include:
+    - agents/**
+    - commands/**
+    - workflows/**
+    - skills/**
+
+onboarding:
+  description: Read-first profile for unfamiliar repos and first safe changes
+  extends: shared
+  include:
+    - agents/explore.md
+    - agents/researcher.md
+    - commands/plan.md
+    - commands/review.md
+    - workflows/repo-first-change.md
+    - skills/repo-onboarding/**
+    - skills/testing/**
+    - skills/code-review/**
+
+delivery:
+  description: Implementation, debugging, testing, and release workflows
+  extends: shared
+  include:
+    - agents/debugger.md
+    - agents/implementer.md
+    - agents/reviewer.md
+    - commands/**
+    - workflows/ship-a-bug-fix.md
+    - workflows/ship-a-feature.md
+    - skills/debugging/**
+    - skills/refactoring/**
+    - skills/release-management/**
+    - skills/reproduction/**
+    - skills/root-cause-analysis/**
+    - skills/testing/**
+
+go:
+  description: Go-specific skills layered on top of delivery
+  extends: delivery
+  include:
+    - skills/go-patterns/**
+
+typescript:
+  description: TypeScript-specific skills layered on top of delivery
+  extends: delivery
+  include:
+    - skills/typescript-patterns/**
+    - skills/react-patterns/**
+
+security:
+  description: Security-focused review and hardening skills
+  extends: shared
+  include:
+    - agents/reviewer.md
+    - commands/review.md
+    - skills/code-review/**
+    - skills/security-review/**
+
+full:
+  description: Entire committed registry surface
+  include:
+    - "**/*"
