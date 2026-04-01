@@ -25,6 +25,7 @@ onboarding:
     - skills/repo-onboarding/**
     - skills/testing/**
     - skills/code-review/**
+    - skills/brainstorming/**
 
 delivery:
   description: Implementation, debugging, testing, and release workflows
@@ -36,11 +37,15 @@ delivery:
     - commands/**
     - workflows/ship-a-bug-fix.md
     - workflows/ship-a-feature.md
+    - skills/brainstorming/**
+    - skills/compound-learning/**
     - skills/debugging/**
+    - skills/persistent-planning/**
     - skills/refactoring/**
     - skills/release-management/**
     - skills/reproduction/**
     - skills/root-cause-analysis/**
+    - skills/spec-driven-dev/**
     - skills/testing/**
 
 go:
