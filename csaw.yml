@@ -70,6 +70,26 @@ security:
     - skills/code-review/**
     - skills/security-review/**
 
+mcp-claude-code:
+  description: MCP server config for Claude Code
+  include:
+    - mcp/claude-code.json
+
+mcp-vscode:
+  description: MCP server config for VS Code and GitHub Copilot
+  include:
+    - mcp/vscode.json
+
+mcp-cursor:
+  description: MCP server config for Cursor
+  include:
+    - mcp/cursor.json
+
+mcp:
+  description: MCP server config for all supported tools
+  include:
+    - mcp/**
+
 full:
   description: Entire committed registry surface
   include:
