@@ -1,8 +1,4 @@
 README.md
 CONTRIBUTING.md
 SECURITY.md
-SOURCES.md
 experimental/**
-.mcp.json
-.vscode/**
-.cursor/**
